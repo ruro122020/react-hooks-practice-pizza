@@ -21,12 +21,11 @@ function App() {
     .then(res => res.json())
     .then(pizzasData => setPizzas(pizzasData))
   }, [])
-  console.log(pizzas)
   return (
     <>
       <Header />
       <PizzaForm />
-      <PizzaList />
+      <PizzaList pizzas={pizzas} />
     </>
   );
 }
