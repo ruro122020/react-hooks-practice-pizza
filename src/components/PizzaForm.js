@@ -8,12 +8,11 @@ function PizzaForm({editPizza, onFormSubmit}) {
   })
   useEffect(()=>{
     if(editPizza){
-      const {id, size, topping, vegetarian} = editPizza
+      const { size, topping, vegetarian} = editPizza
       setFormData({
-        id: id,
         size:size,
         topping: topping,
-        vegetarian: vegetarian 
+        vegetarian: vegetarian
       })
 
     }
@@ -26,7 +25,19 @@ function PizzaForm({editPizza, onFormSubmit}) {
 
   const handleSubmit =(e)=>{
     e.preventDefault()
-    onFormSubmit(formData)
+    const updatedPizza = {
+      ...formData,
+      vegetarian: formData.vegetarian === "Vegetarian"
+    }
+    fetch(`http://localhost:3001/pizzas/${editPizza.id}`,{
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedPizza)
+    })
+    .then(res => res.json())
+    .then(updatePizza => onFormSubmit(updatePizza))
   }
   return (
     <form onSubmit={handleSubmit}>
