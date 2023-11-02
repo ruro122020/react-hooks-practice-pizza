@@ -16,7 +16,7 @@ import Pizza from "./Pizza";
 
 function App() {
   const [pizzas, setPizzas] = useState([])
-  const [editPizza, setEditPizza] = useState({})
+  const [editPizza, setEditPizza] = useState(null)
 
   useEffect(()=>{
     fetch(' http://localhost:3001/pizzas')
@@ -25,12 +25,24 @@ function App() {
   }, [])
 
   const handleEditPizza =(pizzObj)=>{
-    console.log(pizzObj)
+    const vegetarian = pizzObj.vegetarian ? 'Vegetarian': 'Not Vegetarian'
+    setEditPizza({...pizzObj, vegetarian: vegetarian})
+  }
+  const handleFormSubmit =(updatePizza)=>{
+    const setVegBool = updatePizza.vegetarian === 'Vegetarian' 
+    const updatePizzas = pizzas.map(pizza => {
+        if(pizza.id === updatePizza.id){
+          return {...updatePizza, vegetarian: setVegBool}
+        }else{
+          return pizza
+        }
+    })
+    setPizzas(updatePizzas)
   }
   return (
     <>
       <Header />
-      <PizzaForm editPizza={editPizza} />
+      <PizzaForm editPizza={editPizza} onFormSubmit={handleFormSubmit}/>
       <PizzaList>
         {pizzas.map(pizza => <Pizza key={pizza.id} pizza={pizza} onEditPizza={handleEditPizza} />)}
       </PizzaList>
