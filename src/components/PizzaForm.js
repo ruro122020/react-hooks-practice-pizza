@@ -1,43 +1,49 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
-function PizzaForm({editPizza, onFormSubmit}) {
+function PizzaForm({ editPizza, onFormSubmit }) {
   const [formData, setFormData] = useState({
     size: '',
-    topping:'',
+    topping: '',
     vegetarian: null
   })
-  useEffect(()=>{
-    if(editPizza){
-      const { size, topping, vegetarian} = editPizza
+  useEffect(() => {
+    if (editPizza) {
+      const { size, topping, vegetarian } = editPizza
       setFormData({
-        size:size,
+        size: size,
         topping: topping,
         vegetarian: vegetarian
       })
 
     }
-  },[editPizza])
+  }, [editPizza])
 
-  const handleChange =(e)=>{
-    const {name, value} = e.target
-    setFormData({...formData, [name]:value})
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
   }
 
-  const handleSubmit =(e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault()
     const updatedPizza = {
       ...formData,
       vegetarian: formData.vegetarian === "Vegetarian"
     }
-    fetch(`http://localhost:3001/pizzas/${editPizza.id}`,{
+    fetch(`http://localhost:3001/pizzas/${editPizza.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(updatedPizza)
     })
-    .then(res => res.json())
-    .then(updatePizza => onFormSubmit(updatePizza))
+      .then(res => res.json())
+      .then(updatePizza => onFormSubmit(updatePizza))
+
+    setFormData({
+      size: '',
+      topping: '',
+      vegetarian: null
+    })
   }
   return (
     <form onSubmit={handleSubmit}>
